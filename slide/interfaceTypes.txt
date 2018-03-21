@@ -1,0 +1,5 @@
+Interface types
+ - An interface type specifies a method set called its interface.
+ - A variable of interface type can store a value of any type with a // HL
+   method set that is any superset of the interface. // HL
+ - Such a type is said to implement the interface.  // HL

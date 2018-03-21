@@ -1,0 +1,6 @@
+The concrete value stored in an interface is not addressable, in the same way that
+a map element is not addressable.
+Therefore, when you call a method on an interface, it must either have an identical
+receiver type or it must be directly discernible from the concrete type:
+pointer- and value-receiver methods can be called with pointers and values respectively,
+as you would expect.
