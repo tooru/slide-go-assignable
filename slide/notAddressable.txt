@@ -1,6 +1,8 @@
-The concrete value stored in an interface is not addressable, in the same way that // HL
-a map element is not addressable.  // HL
-Therefore, when you call a method on an interface, it must either have an identical
-receiver type or it must be directly discernible from the concrete type:
-pointer- and value-receiver methods can be called with pointers and values respectively,
-as you would expect.
+- The concrete value stored in an interface is not addressable, in the same way that // HL
+  a map element is not addressable.  // HL
+- Therefore, when you call a method on an interface, it must either have an identical receiver
+  type or it must be directly discernible from the concrete type: pointer- and value-receiver
+  methods can be called with pointers and values respectively, as you would expect.
+- Value-receiver methods can be called with pointer values because they can be dereferenced first.
+- Pointer-receiver methods cannot be called with values, however, because the value stored inside // HL
+  an interface has no address. // HL
