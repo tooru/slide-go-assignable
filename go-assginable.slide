@@ -18,7 +18,7 @@ https://github.com/tooru/slide-go-assignable
 
 * 経緯
 
-- 「Goなら分かるシステムプログラミング」のp19のコード例に不可解な代入があった(17行目)。
+- 「Goなら分かるシステムプログラミング」のp19の[[https://play.golang.org/p/k0pLFTs_3YY][コード]]例に不可解な代入があった(17行目)。
 - 一見、型が違いそうだがコンパイルエラーにはならない。12行目が*Greeter型であれば気にならなかったのだが。
 
 .code -numbers src/main.go /^type Talker/,
@@ -108,17 +108,41 @@ https://github.com/tooru/slide-go-assignable
 - T型の値をインタフェース型の変数に代入すると、その値はアドレス化できない(not addressable)ため、レシーバに*T型を含むメソッドをメソッドセットに含められない(メソッドが呼び出せない）ということのようです。
 - Wikiにあるサンプルコードを見ると理解できると思います。[[https://play.golang.org/p/seSNPNNbPqh][Go Playground]]にも貼り付けました。
 
-* まとめ
+* さらに問題
 
+.code -numbers src/main3.go /^type Greeter/,/(4)/
+
+選択問題
+.code slide/main3question.txt
+
+* 答え
+
+- 「2. (2)と(3)はコンパイルエラー」 が正解です。[[https://play.golang.org/p/c3ePsIq3sho][Go Playground]]
+
+.link https://golang.org/ref/spec#Assignability
+
+.code slide/assignability.txt /x's type is identical to T./
+
+- *T型は*T型に加えT型をレシーバに持つメソッドをメソッドセットとしますが、メソッドセットはインタフェースを実装しているかどうかの判断に使います
+- よって、具象型への代入についてはメソッドセットの話は関係ありません。
+- 具象型やポインタ型への変数への代入は単純に同じ型でないと代入できません。
+- インタフェース型のポインタへの代入も同様に、インタフェース型のポインタ型でないと代入できません。
+
+* 代入まとめ
+
+- 具象型やポインタ型への代入は、同じ型でないと代入できない。
+- インタフェース型への代入はちょっと特殊。
+- T型がインタフェース型の時、T型のメソッドセットを持つ型の値を代入可能。
 - T型はT型をレシーバに持つメソッドのみをメソッドセットとする
 - *T型は*T型に加えT型をレシーバに持つメソッドをメソッドセットとする
-- これらメソッドセットがインタフェースのメソッドを全て含まれる場合、インタフェースに代入可能
-- T型のメソッドセットに*T型をレシーバに持つメソッドを含めないのは、T型をインタフェースに代入した時に、その値が格納されているアドレスが取得できないため。(メソッドが呼び出せない）
+- T型のメソッドセットに*T型をレシーバに持つメソッドを含めないのは、T型をインタフェースに代入した時に、その値が格納されているアドレスを取得できないため。(メソッドが呼び出せない）
+
+- 今回の例 +αをまとめた。[[https://play.golang.org/p/7Ms3TsV8lkb][Go Playground]]
 
 
 * 参考情報
 
-- [[https://golang.org/ref/spec][The Go Programming Language Specification]]
+- [[https://golang.org/ref/spec][The Go Programming Language Specification]] インタフェース以外の型への代入についてもっと知りたい人
 - [[https://github.com/golang/go/wiki/MethodSets#interfaces][Method Set golang/go wiki]]
 - [[https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html][Methods, Interfaces and Embedded Types in Go]] 今回触れなかったEmbedded Typesについても書かれています。
 - [[https://github.com/LambdaNote/errata-gosyspro-1-1/issues/29][Goならわかるシステムプログラミング 19ページの正誤情報]]
