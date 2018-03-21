@@ -12,23 +12,22 @@ https://github.com/tooru/slide-go-assignable
 * 話すこと
 
 - 経緯
-- 代入可能とは？
-- 呼び出しについて
+- 代入可能とは
+- 問題
 - まとめ
 
 * 経緯
 
-- 「Goなら分かるシステムプログラミング」のp19の[[https://play.golang.org/p/k0pLFTs_3YY][コード]]例に不可解な代入があった(17行目)。
-- 一見、型が違いそうだがコンパイルエラーにはならない。12行目が*Greeter型であれば気にならなかったのだが。
+- 「Goなら分かるシステムプログラミング」のp19のコードに不可解な代入文がありました(下記17行目)。
+- 一見、型が違いそうですがコンパイルエラーにはなりません。[[https://play.golang.org/p/k0pLFTs_3YY][📌 Playground]]
 
 .code -numbers src/main.go /^type Talker/,
 
 * なぜ代入できるのか
 
-- ある変数にある値が代入できる、とはどういう決まりがあるのか？	
-- 言語仕様を読むのが手っ取り早い。
+- 「ある変数にある値が代入できる」とはどういうことでしょうか？
 - ということで
-- [[https://golang.org/ref/spec][Goの言語仕様 (The Go Programming Language Specification)]] を読んでみたという発表です。
+- [[https://golang.org/ref/spec][Goの言語仕様 (The Go Programming Language Specification)]] を(少し)読んでみたという発表です。
 
 * 代入可能とは？ (1/3) Assinablity 
 
@@ -36,8 +35,8 @@ https://github.com/tooru/slide-go-assignable
 
 .code slide/assignability.txt
 
-- 3つ目の「TがInterface型でxがTを実装している」が該当しそう
-- Talkerの例では「 `Talker` がInterface型で `&Greeter{"wozozo"}` がTを実装している」といえればよい
+- 3つ目の「TがInterface型でxがTを実装している」が該当しそうです
+- Talkerの例では「 `Talker` がInterface型で `&Greeter{"wozozo"}` がTを実装している」といえれば代入可能です
 - では、xがTを実装しているとは？？
 
 * 代入可能とは？ (2/3) Interface Types
@@ -47,12 +46,12 @@ https://github.com/tooru/slide-go-assignable
 .code slide/interfaceTypes.txt
 
 - インタフェースのメソッドセット(メソッドの集まり)全てを持つ型は、そのインタフェースを *実装している* といえる
-- Talkerの例では `&Greeter{"wozozo"}` の型である `Greeter` のポインタ が `Talk()` を持っていれば実装しているということ、、でも、、
+- Talkerの例では `&Greeter{"wozozo"}` の型である `Greeter` のポインタ型 が `Talk()` を持っていれば実装しているということ、、でも、、
 
 .code -numbers src/main.go /^func \(g Greeter\)/
 
 - 実装しているといって良いものか
-- それには、メソッドセットを調べる必要がある
+- これは、メソッドセットの仕様に書いてありました。
 
 * 代入可能とは？ (3/3) Method Sets
 
@@ -60,24 +59,23 @@ https://github.com/tooru/slide-go-assignable
 
 .code slide/methodSets.txt
 
-- 4つ目がポイント「Tのポインタ型のメソッドセットはレシーバの型が * *TまたはTであるすべてのメソッド* です」
-- Talkerの例では `&Greeter{"wozozo"}` の型である `Greeter` のポインタ のメソッドセットは、 `*Greeter` だけでなく `Greeter` をレシーバにとるメソッドを含めて良い
-- よって
+- 4つ目がポイントです。「Tのポインタ型のメソッドセットはレシーバの型が * *TまたはTであるすべてのメソッド* 」とあります。
+- Talkerの例では `&Greeter{"wozozo"}` の型である `Greeter` のポインタ のメソッドセットは、 `*Greeter` だけでなく `Greeter` をレシーバにとるメソッドを含めて良いです。よって、
 
 .code -numbers src/main.go /^func \(g Greeter\)/
 
-- `*Greeter` のメソッドセットに含めて良い
+- `*Greeter` のメソッドセットに含めて良いです。
 
 * まとめると
 
-- `&Greeter{"wozozo"}` の型である `*Greeter` は、メソッドセットに func(g Greeter) Talk() を持つことから `Talker` インタフェースのメソッドセットを全て持つ。
-- よって、`&Greeter{"wozozo"}` は `Talker` インタフェースを実装しており、`Talker` 型(の変数)に代入可能である。
+- `&Greeter{"wozozo"}` の型である `*Greeter` は、メソッドセットに func(g Greeter) Talk() を持つことから `Talker` インタフェースのメソッドセットを全て持ちます。
+- そのため、`&Greeter{"wozozo"}` は `Talker` インタフェースを実装しているといえ、`Talker` 型(の変数)に代入可能です。
 
-- 長くなりましたが、言語仕様上問題ない代入とのこと
+- 長くなりましたが、言語仕様上問題ない代入であることが分かりました。
 
 * では問題です
 
-以下はどうでしょうか？
+以下はどうでしょうか？17行目は代入できますか？
 
 .code -numbers src/main2.go /^type Talker/,
 
@@ -86,16 +84,16 @@ https://github.com/tooru/slide-go-assignable
 
 * 答え
 
-- 「2. コンパイルエラー」 が正解です。[[https://play.golang.org/p/iLVSnnkTxwP][Go Playground]]
+- 「2. コンパイルエラー」 が正解です。[[https://play.golang.org/p/jR948qwF7cA][📌 Playground]]
 - なぜか？
-- 先ほど見たメソッドセットの説明に書いてあります。
+- 先ほど見たメソッドセットの仕様に書かれています。
 
 .link https://golang.org/ref/spec#Method_sets
 
-.code slide/methodSets.txt /The method set of any other type T/
+.code slide/methodSets.txt /The method set of any other type T/,
 
 - *T型は*T型またはT型をレシーバに持つメソッドをメソッドセットとしていましたが、T型はT型をレシーバに持つメソッドだけをメソッドセットとします
-- `Greeter` 型はレシーバが `*Greeter` 型のメソッドをメソッドセットに含められないということ。
+- `Greeter` 型はレシーバが `*Greeter` 型のメソッドをメソッドセットに含められないということです。
 - なにやら非対称ですね。なぜでしょうか。
 
 * 具象型とポインタ型でメソッドセットが非対称な理由
@@ -106,9 +104,21 @@ https://github.com/tooru/slide-go-assignable
 .code slide/notAddressable.txt
 
 - T型の値をインタフェース型の変数に代入すると、その値はアドレス化できない(not addressable)ため、レシーバに*T型を含むメソッドをメソッドセットに含められない(メソッドが呼び出せない）ということのようです。
-- Wikiにあるサンプルコードを見ると理解できると思います。[[https://play.golang.org/p/seSNPNNbPqh][Go Playground]]にも貼り付けました。
+- Wikiにあるサンプルコードを見ると理解できると思います。[[https://play.golang.org/p/seSNPNNbPqh][📌 Playground]]にも貼り付けました。
+
+
+: Therefore, when you call a method on an interface, it must either have an identical
+: receiver type or it must be directly discernible from the concrete type:
+: pointer- and value-receiver methods can be called with pointers and values respectively,
+: as you would expect.
+
+: したがって、インターフェイス上のメソッドを呼び出すときは、同一のレシーバタイプか具象型から
+: 直接認識できる(discernible)なければならない。
+: ポインタレシーバメソッドと値レシーバメソッドはそれぞれポインタと値で呼び出すことができます。
 
 * さらに問題
+
+コンパイルできるでしょうか？
 
 .code -numbers src/main3.go /^type Greeter/,/(4)/
 
@@ -117,27 +127,27 @@ https://github.com/tooru/slide-go-assignable
 
 * 答え
 
-- 「2. (2)と(3)はコンパイルエラー」 が正解です。[[https://play.golang.org/p/c3ePsIq3sho][Go Playground]]
+- 「2. (2)と(3)はコンパイルエラー」 が正解です。[[https://play.golang.org/p/c3ePsIq3sho][📌 Playground]]
 
 .link https://golang.org/ref/spec#Assignability
 
 .code slide/assignability.txt /x's type is identical to T./
 
-- *T型は*T型に加えT型をレシーバに持つメソッドをメソッドセットとしますが、メソッドセットはインタフェースを実装しているかどうかの判断に使います
-- よって、具象型への代入についてはメソッドセットの話は関係ありません。
-- 具象型やポインタ型への変数への代入は単純に同じ型でないと代入できません。
-- インタフェース型のポインタへの代入も同様に、インタフェース型のポインタ型でないと代入できません。
+- 代入する変数の型がインタフェース型ではないので、メソッドセットの話は今回関係ありません。
+- メソッドセットはインタフェースを実装しているかどうかの判断に使います。
+- 具象型やポインタ型への変数への代入は、同じ型でないと代入できません。
 
 * 代入まとめ
 
-- 具象型やポインタ型への代入は、同じ型でないと代入できない。
-- インタフェース型への代入はちょっと特殊。
-- T型がインタフェース型の時、T型のメソッドセットを持つ型の値を代入可能。
-- T型はT型をレシーバに持つメソッドのみをメソッドセットとする
-- *T型は*T型に加えT型をレシーバに持つメソッドをメソッドセットとする
-- T型のメソッドセットに*T型をレシーバに持つメソッドを含めないのは、T型をインタフェースに代入した時に、その値が格納されているアドレスを取得できないため。(メソッドが呼び出せない）
+💡 具象型やポインタ型への代入は、同じ型でないと代入できません。
 
-- 今回の例 +αをまとめた。[[https://play.golang.org/p/7Ms3TsV8lkb][Go Playground]]
+💡 インタフェース型への代入はちょっと特殊です。
+
+- T型がインタフェース型の時、T型のメソッドセットを持つ型の値を代入可能です。
+- T型はT型をレシーバに持つメソッドのみをメソッドセットとします
+- *T型は*T型に加えT型をレシーバに持つメソッドをメソッドセットとします
+- T型のメソッドセットに*T型をレシーバに持つメソッドを含めないのは、T型をインタフェースに代入した時に、その値が格納されているアドレスを取得できないためのようです。(メソッドが呼び出せない）
+💡 今回の例をまとめました。[[https://play.golang.org/p/JeE8WEEgc--][📌 Playground]]
 
 
 * 参考情報

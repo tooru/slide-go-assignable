@@ -1,7 +1,7 @@
 Method sets
 
-- A type may have a method set associated with it.
-- The method set of an interface type is its interface.
-- The method set of any other type T consists of all methods declared with receiver type T.
-- The method set of the corresponding pointer type *T is the set of
-all methods declared with receiver *T or T (that is, it also contains the method set of T).
+1. A type may have a method set associated with it.
+2. The method set of an interface type is its interface.
+3. The method set of any other type T consists of all methods declared with receiver type T.
+4. The method set of the corresponding pointer type *T is the set of // HL
+all methods declared with receiver *T or T (that is, it also contains the method set of T). // HL

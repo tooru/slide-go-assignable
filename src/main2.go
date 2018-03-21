@@ -9,11 +9,11 @@ type Greeter struct {
 	name string
 }
 
-func (g *Greeter) Talk() { // レシーバは*Greeter型、、 // HL
+func (g *Greeter) Talk() { // レシーバ型をGreeter -> *Greeterに変更 // HL
 	fmt.Printf("Hello, %s\n", g.name)
 }
 func main() {
 	var talker Talker
-	talker = Greeter{"wozozo"} // Greeter型は代入できる？？ // HL
+	talker = Greeter{"wozozo"} // リテラルの型を*Greeter -> Greeterに変更 // HL
 	talker.Talk()
 }
