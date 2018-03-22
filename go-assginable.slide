@@ -165,8 +165,8 @@ https://github.com/tooru/slide-go-assignable
 
 🔖 [[https://www.ardanlabs.com/blog/2014/05/methods-interfaces-and-embedded-types.html][Methods, Interfaces and Embedded Types in Go]]
 
-- Go in Actionの著者 William Kennedy (@goinggodotnet) の記事
-- 今回触れなかったEmbedded Fields (Type)についても書かれています。2014年なので古いかもしれません。
+- Go in Actionの著者 William Kennedy (@goinggodotnet) の記事 (2014年)
+- 今回触れなかったEmbedded Fields (Type)についても書かれています
 
 🔖 [[https://github.com/LambdaNote/errata-gosyspro-1-1/issues/29][Goならわかるシステムプログラミング 19ページの正誤情報]]
 
