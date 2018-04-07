@@ -23,6 +23,8 @@ https://github.com/tooru/slide-go-assignable
 
 .code -numbers src/main.go /^type Talker/,
 
+※おそらくL12は `*Greeter` の誤植
+
 * なぜ代入できるのか
 
 - 「ある変数にある値が代入できる」とはどういうことでしょうか？
